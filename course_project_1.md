@@ -163,7 +163,7 @@ p <- ggplot(steps_by_interval, aes(x=interval, y=average_steps)) +
 p
 ```
 
-![](course_project_1_files/figure-html/time serie-1.png)<!-- -->
+![Average number of steps by 5 min. interval](course_project_1_files/figure-html/time serie-1.png)
 
 **Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?**
 
