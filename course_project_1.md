@@ -91,8 +91,7 @@ Making histogram with base system
 
 ``` r
 with(steps_by_day, {
-  hist(total_steps, col = "green", breaks = 10, main = "Histogram total steps by day", xlab = "Total steps")
-  rug(total_steps)
+  hist(total_steps, col = "green", main = "Histogram total steps by day", xlab = "Total steps")
 })
 ```
 
@@ -100,7 +99,8 @@ with(steps_by_day, {
 day](course_project_1_files/figure-gfm/histogram-1.png)
 
 **Calculate and report the mean and median of the total number of steps
-taken per day**
+taken per day** Using two ways to get mean and median. With `summary`
+and `mean()` & `median()`
 
 ``` r
 summary(steps_by_day$total_steps)
@@ -151,7 +151,8 @@ Plotting time serie
 ``` r
 with(steps_by_interval, {
 plot(interval, average_steps, type = "l",
-     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps")
+     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps", col = "blue", lwd = 1, frame.plot=FALSE, xaxt="n")
+  axis(1, at = seq(00, 2355, by = 50), las=2)
   })
 ```
 
@@ -159,7 +160,8 @@ plot(interval, average_steps, type = "l",
 interval](course_project_1_files/figure-gfm/time%20serie-1.png)
 
 **Which 5-minute interval, on average across all the days in the
-dataset, contains the maximum number of steps?**
+dataset, contains the maximum number of steps?** Getting the interval
+filtering with `which.max()`
 
 ``` r
 max_steps_interval <- steps_by_interval[which.max(steps_by_interval$average_steps),]
@@ -170,6 +172,21 @@ max_steps_interval
     ##   interval average_steps
     ##      <int>         <dbl>
     ## 1      835          206.
+
+Adding vertical line to check if interval 835 has the maximum steps in
+graph
+
+``` r
+with(steps_by_interval, {
+plot(interval, average_steps, type = "l",
+     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps", col = "blue", lwd = 1, frame.plot=FALSE, xaxt="n")
+  axis(1, at = seq(00, 2355, by = 50), las=2)
+  abline(v=835, col = "red", lwd = 1)
+  })
+```
+
+![Average number of steps by 5 min.
+interval](course_project_1_files/figure-gfm/time%20serie%20max-1.png)
 
 ## Imputing missing values
 

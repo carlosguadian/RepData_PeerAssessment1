@@ -50,12 +50,12 @@ head(steps_by_day)
 Making histogram with base system
 ```{r histogram,fig.height=5,fig.cap="Histogram of total steps by day", echo=TRUE}
 with(steps_by_day, {
-  hist(total_steps, col = "green", breaks = 10, main = "Histogram total steps by day", xlab = "Total steps")
-  rug(total_steps)
+  hist(total_steps, col = "green", main = "Histogram total steps by day", xlab = "Total steps")
 })
 ```
 
 **Calculate and report the mean and median of the total number of steps taken per day**
+Using two ways to get mean and median. With `summary` and `mean()` & `median()`
 ```{r mean median, echo=TRUE}
 summary(steps_by_day$total_steps)
 mean(steps_by_day$total_steps, na.rm = TRUE)
@@ -74,17 +74,28 @@ head(steps_by_interval)
 ```
 
 Plotting time serie
-```{r time serie,fig.height=5,fig.cap="Average number of steps by 5 min. interval", echo=TRUE}
+```{r time serie,fig.cap="Average number of steps by 5 min. interval", echo=TRUE}
 with(steps_by_interval, {
 plot(interval, average_steps, type = "l",
-     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps")
+     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps", col = "blue", lwd = 1, frame.plot=FALSE, xaxt="n")
+  axis(1, at = seq(00, 2355, by = 50), las=2)
   })
 ```
 
 **Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?**
+Getting the interval filtering with `which.max()`
 ```{r interval max, echo=TRUE}
 max_steps_interval <- steps_by_interval[which.max(steps_by_interval$average_steps),]
 max_steps_interval
+```
+Adding vertical line to check if interval 835 has the maximum steps in graph
+```{r time serie max,fig.cap="Average number of steps by 5 min. interval", echo=TRUE}
+with(steps_by_interval, {
+plot(interval, average_steps, type = "l",
+     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps", col = "blue", lwd = 1, frame.plot=FALSE, xaxt="n")
+  axis(1, at = seq(00, 2355, by = 50), las=2)
+  abline(v=835, col = "red", lwd = 1)
+  })
 ```
 
 ## Imputing missing values
