@@ -3,8 +3,9 @@ title: "Reproducible Research: Peer Assessment 1"
 author: "Carlos Guadián"
 date: "12/2/2021"
 output: 
-  html_document:
-    keep_md: true
+  github_document:
+    keep_html: true
+    toc: TRUE
 ---
 
 ```{r setup, include=FALSE}
