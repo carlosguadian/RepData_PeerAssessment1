@@ -74,7 +74,10 @@ head(steps_by_interval)
 
 Plotting time serie
 ```{r time serie,fig.height=5,fig.cap="Average number of steps by 5 min. interval", echo=TRUE}
-plot(steps_by_interval$interval, steps_by_interval$average_steps, type = "l", main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps")
+with(steps_by_interval, {
+plot(interval, average_steps, type = "l",
+     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps")
+  })
 ```
 
 **Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?**

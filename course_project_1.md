@@ -160,7 +160,10 @@ head(steps_by_interval)
 Plotting time serie
 
 ```r
-plot(steps_by_interval$interval, steps_by_interval$average_steps, type = "l", main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps")
+with(steps_by_interval, {
+plot(interval, average_steps, type = "l",
+     main = "Average number of steps by 5 min. interval", xlab = "5 minutes Interval", ylab = "Average Steps")
+  })
 ```
 
 ![Average number of steps by 5 min. interval](course_project_1_files/figure-html/time serie-1.png)
