@@ -108,4 +108,102 @@ summary(activity)
 sum(is.na(activity$steps))
 ```
 
+**Create a new dataset that is equal to the original dataset but with the missing data filled in.**
+
 **Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.**
+
+To replace NA we get the mean of each interval and then substitute the NA for this new data.
+```{r, echo=TRUE}
+library(dplyr)
+# Create new dataset to fill NA values
+intervals <- activity
+# Groupping and replacing
+intervals <- intervals %>%
+  left_join(intervals %>%
+              group_by(interval) %>%
+              summarise(mean_steps = mean(steps, na.rm = TRUE))) %>%
+  mutate(steps = ifelse(is.na(steps), mean_steps, steps)) %>%
+  select(-mean_steps)
+```
+
+Check if the replace are OK
+```{r, echo = TRUE}
+# First if there are NA values
+summary(intervals)
+sum(is.na(intervals$steps))
+```
+
+**Make a histogram of the total number of steps taken each day**
+
+To calculate the total number of steps taken per day first I have to group data by day. To do this we need the `tidyverse` library.
+```{r, echo=TRUE}
+steps_by_day_clean <- intervals %>%
+  group_by(date) %>%
+  summarize(total_steps = sum(steps))
+head(steps_by_day_clean)
+```
+
+Making histogram
+```{r histogram no NA,fig.height=5,fig.cap="Histogram of total steps by day without NA", echo=TRUE}
+with(steps_by_day_clean, {
+  hist(total_steps, col = "green", main = "Histogram total steps by day without NA", xlab = "Total steps")
+})
+```
+
+**Calculate and report the mean and median total number of steps taken per day**
+```{r mean median no NA, echo=TRUE}
+summary(steps_by_day_clean$total_steps)
+mean(steps_by_day_clean$total_steps, na.rm = TRUE)
+median(steps_by_day_clean$total_steps, na.rm = TRUE)
+```
+
+**Do these values differ from the estimates from the first part of the assignment?**
+
+Comparing two values
+```{r, echo=TRUE}
+#comparing mean
+identical(mean(steps_by_day$total_steps, na.rm = TRUE), mean(steps_by_day_clean$total_steps, na.rm = TRUE))
+# comparing median
+identical(median(steps_by_day$total_steps, na.rm = TRUE),median(steps_by_day_clean$total_steps, na.rm = TRUE))
+```
+
+**What is the impact of imputing missing data on the estimates of the total daily number of steps?**
+
+```{r, echo=TRUE}
+# Summarizing
+# With NA
+summary(steps_by_day)
+#Without NA
+summary(steps_by_day_clean)
+```
+
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+For this part the `weekdays()` function may be of some help here. Use the dataset with the filled-in missing values for this part.
+
+Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+```{r, echo=TRUE}
+#create a vector of weekdays
+weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
+#Use `%in%` and `weekdays` to create a logical vector
+#convert to `factor` and specify the `levels/labels`
+intervals$wDay <- factor((weekdays(intervals$date) %in% weekdays1), 
+         levels=c(FALSE, TRUE), labels=c('weekend', 'weekday'))
+```
+
+**Make a panel plot containing a time series plot type = "l" of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).**
+
+Groupping by interval and wDay
+```{r, echo=TRUE}
+weekday_vs_weekend <- intervals %>%
+  group_by(interval, wDay) %>%
+  summarise(steps_mean = mean(steps))
+```
+
+Plotting panel to compare weedays with weekend
+```{r}
+library(lattice)
+xyplot(steps_mean ~ interval | wDay, data = weekday_vs_weekend, type = "l", layout = (c(1,2)))
+```
+
